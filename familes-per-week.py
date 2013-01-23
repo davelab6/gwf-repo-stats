@@ -54,7 +54,7 @@ def lookup_fonts(f):
 
 
 def revision():
-    fp = open('output.csv', 'w')
+    fp = open('gwf_files.csv', 'w')
 
     doc = csv.writer(fp, delimiter=',', quoting=csv.QUOTE_MINIMAL)
     doc.writerow(['date', '/'])
