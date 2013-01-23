@@ -1,4 +1,16 @@
 #!/usr/bin/env python
+#
+# Copyright (c) 2013, 
+# Виталий Волков <hash.3g@gmail.com> 
+# Dave Crossland <dave@understandinglimited.com>
+#
+# Released under the Apache License version 2.0 or later.
+# See accompanying LICENSE file for details.
+# 
+# gwf_files.py - prints date and number of TTF files
+# in each published family for each revision of the repo
+#
+
 import csv
 import hglib
 import hglib.error
