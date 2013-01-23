@@ -87,8 +87,10 @@ def revision():
         # for files we got directory that has manifests
         if files:
             row = [rev[6].strftime('%Y-%m-%d %H:%M')]
+            print rev[6].strftime('%Y-%m-%d') + ',', 
             files = filter(lookup_fonts, flist)
             row.append(len(files))
+            print len(files)
             doc.writerow(row)
 
     fp.close()
