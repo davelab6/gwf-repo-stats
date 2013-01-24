@@ -8,9 +8,12 @@
 # Released under the Apache License version 2.0 or later.
 # See accompanying LICENSE file for details.
 # 
-# files-per-week.py - prints date and number of TTF files
+# files-per-checkin.py - prints date and number of TTF files
 # in each published family for each revision of the repo
 #
+# See README.md for details. Quick usage: 
+#
+# $ GWF_REPO="/home/user/googlefontdirectory" python files-per-checkin.py;
 
 import csv
 import hglib
@@ -70,7 +73,7 @@ def revision():
     fp = open('gwf_files.csv', 'w')
 
     doc = csv.writer(fp, delimiter=',', quoting=csv.QUOTE_MINIMAL)
-    doc.writerow(['date', '/'])
+    doc.writerow(['date', 'files'])
 
     revs = reversed(g.client.log(revrange='tip:1'))
 
