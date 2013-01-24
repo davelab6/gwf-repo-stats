@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+# -*- coding: utf-8 -*-
 #
 # Copyright (c) 2013, 
 # Виталий Волков <hash.3g@gmail.com> 
@@ -7,7 +8,7 @@
 # Released under the Apache License version 2.0 or later.
 # See accompanying LICENSE file for details.
 # 
-# gwf_files.py - prints date and number of TTF files
+# files-per-week.py - prints date and number of TTF files
 # in each published family for each revision of the repo
 #
 
