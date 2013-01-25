@@ -8,13 +8,14 @@
 # Released under the Apache License version 2.0 or later.
 # See accompanying LICENSE file for details.
 # 
-# files-per-checkin.py - prints date and number of TTF files
+# gwf-repo-stats.py - prints date and number of TTF files
 # in each published family for each revision of the repo
 #
 # See README.md for details. Quick usage: 
 #
-# $ GWF_REPO="/home/user/googlefontdirectory" python files-per-checkin.py;
+# $ python gwf-repo-stats.py /home/user/googlefontdirectory;
 
+import argparse
 import csv
 import hglib
 import hglib.error
@@ -23,21 +24,17 @@ import os
 import re
 
 
-GWF_REPO = os.environ.get('GWF_REPO') or '/media/X-Files/googlefontdirectory'
-
-
 class g(object):
-    pass
-
-
-g.client = hglib.open(GWF_REPO)
-g.iterrev = None
-g.exclude = [
-    "visibility\: sandbox",
-    "visibility\: INTERNAL",
-    '"visibility"\: "Sandbox"',
-    '"visibility"\: "Internal"'
-]
+    csv_file = 'gwf-repo-stats.csv'
+    html_report_file = 'gwf-repo-stats.html'
+    iterrev = None
+    client = None
+    exclude = [
+        "visibility\: sandbox",
+        "visibility\: INTERNAL",
+        '"visibility"\: "Sandbox"',
+        '"visibility"\: "Internal"'
+    ]
 
 
 def lookup_metadata(f):
@@ -69,8 +66,50 @@ def lookup_fonts(f):
     return False
 
 
+def html_report():
+    if not os.path.exists(g.csv_file):
+        return False
+    fp = open(g.html_report_file, 'w')
+    html = '''
+<html>
+  <head>
+    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+    <script type="text/javascript">
+      google.load("visualization", "1", {packages:["corechart"]});
+      google.setOnLoadCallback(drawChart);
+      function drawChart() {
+        var data = google.visualization.arrayToDataTable([
+          ['Date', 'Fonts'],
+          %s
+        ]);
+
+        var options = {
+          title: 'Company Performance'
+        };
+
+        var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
+        chart.draw(data, options);
+      }
+    </script>
+  </head>
+  <body>
+    <div id="chart_div" style="width: 900px; height: 500px;"></div>
+  </body>
+</html>
+    '''
+
+    reader = csv.reader(open(g.csv_file), delimiter=',')
+    data = []
+    for row in reader:
+        data.append('["%s", "%s"]' % (row[0], row[1]))
+    html = html % ','.join(data)
+    fp.write(html)
+    fp.close()
+    return True
+
+
 def revision():
-    fp = open('gwf_files.csv', 'w')
+    fp = open(g.csv_file, 'w')
 
     doc = csv.writer(fp, delimiter=',', quoting=csv.QUOTE_MINIMAL)
     doc.writerow(['date', 'files'])
@@ -100,5 +139,21 @@ def revision():
     fp.close()
 
 
+def usage():
+    parser = argparse.ArgumentParser(description='Analizer revisions of Google Web Font directory')
+    parser.add_argument('gwf_repo', metavar='gwf_repo', type=str)
+    parser.add_argument('--csv', help='Output csv file')
+    parser.add_argument('--html', help='Output html report')
+    return parser.parse_args()
+
+
 if __name__ == '__main__':
+    args = usage()
+
+    g.client = hglib.open(args.gwf_repo)
+    if args.csv:
+        g.csv_file = args.csv
+    if args.html:
+        g.html_report_file = args.html
     revision()
+    html_report()
