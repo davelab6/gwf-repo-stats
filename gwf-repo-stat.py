@@ -135,7 +135,9 @@ def revision():
         if files:
             row = [rev[6].strftime('%Y-%m-%d %H:%M')]
             print rev[6].strftime('%Y-%m-%d') + ',', 
-            files = filter(lookup_fonts, flist)
+            
+            if g.count != 'families':
+                files = filter(lookup_fonts, flist)
             row.append(len(files))
             print len(files)
             doc.writerow(row)
@@ -148,6 +150,7 @@ def usage():
     parser.add_argument('gwf_repo', metavar='gwf_repo', type=str)
     parser.add_argument('--csv', help='Output csv file')
     parser.add_argument('--html', help='Output html report')
+    parser.add_argument('--count', help='Valid values `files`|`families`', default='files')
     return parser.parse_args()
 
 
@@ -160,5 +163,7 @@ if __name__ == '__main__':
         g.csv_file = args.csv
     if args.html:
         g.html_report_file = args.html
-    # revision()
+    if args.count:
+        g.count = args.count
+    revision()
     html_report()
