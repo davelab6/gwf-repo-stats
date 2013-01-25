@@ -79,7 +79,7 @@ def html_report():
       google.setOnLoadCallback(drawChart);
       function drawChart() {
         var data = google.visualization.arrayToDataTable([
-          ['Date', 'Fonts'],
+            ['Date', 'Files'],
           %s
         ]);
 
@@ -100,8 +100,12 @@ def html_report():
 
     reader = csv.reader(open(g.csv_file), delimiter=',')
     data = []
+    i = 0
     for row in reader:
-        data.append('["%s", "%s"]' % (row[0], row[1]))
+        if not i:
+            i += 1
+            continue
+        data.append('["%s", %s]' % (row[0], row[1]))
     html = html % ','.join(data)
     fp.write(html)
     fp.close()
@@ -156,5 +160,5 @@ if __name__ == '__main__':
         g.csv_file = args.csv
     if args.html:
         g.html_report_file = args.html
-    revision()
+    # revision()
     html_report()
