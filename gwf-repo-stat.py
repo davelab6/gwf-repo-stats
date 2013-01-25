@@ -42,7 +42,7 @@ def lookup_metadata(f):
     if re.search(r'METADATA(.json)?$', f[4], re.U):
         tries = 0
         try:
-            fp = open(os.path.join(GWF_REPO, f[4]), 'r')
+            fp = open(os.path.join(g.gwf_repo, f[4]), 'r')
             content = fp.read()
             fp.close()
 
@@ -150,7 +150,8 @@ def usage():
 if __name__ == '__main__':
     args = usage()
 
-    g.client = hglib.open(args.gwf_repo)
+    g.gwf_repo = args.gwf_repo
+    g.client = hglib.open(g.gwf_repo)
     if args.csv:
         g.csv_file = args.csv
     if args.html:
