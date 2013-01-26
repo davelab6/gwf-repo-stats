@@ -84,7 +84,7 @@ def html_report():
         ]);
 
         var options = {
-          title: 'Company Performance'
+          title: 'Google Web Fonts Statistic'
         };
 
         var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
