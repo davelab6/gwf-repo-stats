@@ -143,9 +143,9 @@ def revision():
         g.iterrev = rev
         g.exclude_dirs = []
 
-        # print 'Updating to rev', rev, '...',
+        print 'Updating to rev', rev, '...',
         g.client.update(rev=rev[0], clean=True)
-        # print ' done!'
+        print ' done!'
         flist = list(g.client.manifest())
         files = filter(lookup_metadata, flist)
 
