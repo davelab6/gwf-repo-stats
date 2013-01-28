@@ -132,7 +132,10 @@ def revision():
     state = {'files': [], 'date': None}
     for rev in sorted(list(revs), cmp=cmp):
         if state['date'] and rev[6] > state['date'] + datetime.timedelta(days=g.days):
-            row = [state['date'].strftime('%Y-%m-%d'), str(max(state['files']))]
+            uniq = set()
+            for s in state['files']:
+                uniq |= set(s)
+            row = [state['date'].strftime('%Y-%m-%d'), str(len(uniq))]
             doc.writerow(row)
             print ', '.join(row)
             state = {'files': [], 'date': None}
@@ -160,7 +163,7 @@ def revision():
             else:
                 if not state['date']:
                     state['date'] = rev[6]
-                state['files'].append(len(files))
+                state['files'].append(files)
 
     fp.close()
 
